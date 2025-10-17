@@ -1,0 +1,67 @@
+#separator:tab
+#html:false
+Qu’est-ce qu’un système d’exploitation ?	Logiciel qui offre une interface abstraite entre le matériel (CPU, RAM, disque, etc.) et les applications, permettant de gérer les ressources et d’assurer la sécurité.
+Quels sont les rôles principaux d’un OS ?	Gestion des ressources (CPU, mémoire, E/S) Gestion des périphériquesSécurité et isolation des processus
+Quelle est la différence entre un noyau monolithique et un micro-noyau ?	Monolithique : tous les services (fichiers, réseau, planification) tournent en mode noyau → rapide mais moins sûr.Micro-noyau : seul un noyau minimal tourne en mode noyau, le reste en mode utilisateur → plus sûr et modulaire, mais plus lent.
+Qu’est-ce qu’un exokernel ?	Un noyau minimaliste qui n’abstrait pas le matériel ; il fournit uniquement la sécurité et laisse les applications gérer les ressources elles-mêmes.
+Que représentent les “rings” sur x86 ou “Exception Levels” sur ARM ?	Ring 0 / EL1 : noyauRing 3 / EL0 : utilisateur→ Seul le noyau peut exécuter des instructions privilégiées.
+Qu’est-ce qu’un system call ?	Une requête faite par un programme utilisateur au noyau pour exécuter une opération privilégiée (ex. : lire un fichier, écrire sur l’écran, terminer un processus).
+Comment un appel système est-il réalisé ?	"L’application place les arguments dans les registres (x0-x2…). Le numéro d’appel dans w8.   Elle exécute l’instruction svc #0 (Supervisor Call). Le noyau exécute la fonction correspondante."
+Donne un exemple d’appel système sous Linux pour écrire “Hello, World!”	"mov x0, #1      // stdout ldr x1, =msg    // adresse du texte mov x2, #14     // longueur mov w8, #64     // syscall write svc #0"
+Quelle est la différence entre un branch/call et un system call ?	call/branch → transfert de contrôle dans le même programme (même niveau de privilège).system call → transfert vers le noyau (niveau de privilège supérieur).
+Qu’est-ce qu’un signal ?	Une notification asynchrone envoyée à un processus pour indiquer un événement (ex. : SIGINT pour Ctrl+C, SIGKILL pour terminer).
+Qu’est-ce que strace ?	Un outil Linux qui intercepte et affiche les appels système d’un processus pour le déboguer.
+Quelles sont les deux grandes zones mémoire d’un processus ?	Statique : code, données initialisées, BSS.   Dynamique : pile (stack) et tas (heap).
+Quelle est la différence entre pile et tas ?	Pile : gérée automatiquement (LIFO), utilisée pour variables locales, appels de fonctions.   Tas : géré manuellement (malloc/new), pour objets dynamiques.
+Comment s’effectue l’allocation dynamique sous Linux ?	Par deux appels système :    brk : déplace la “program break” (limite du tas).    mmap : mappe des fichiers ou alloue des zones virtuelles.
+Quelle différence entre brk et mmap ?	brk : rapide mais sujet à fragmentation.   mmap : plus flexible, utile pour grosses allocations ou fichiers mappés.
+Qu’est-ce que la fragmentation ?	Interne : espace inutilisé à l’intérieur d’une partition fixe.   Externe : petits “trous” dispersés empêchant de nouvelles allocations.
+Que font les stratégies First fit, Best fit, Worst fit, Next fit ?	First fit : première case assez grande.  Best fit : plus petite case suffisante.   Worst fit : plus grande case disponible. Next fit : reprend la recherche après la dernière allocation.
+Qu’est-ce que la pagination ?	Technique où la mémoire est découpée en pages fixes mappées sur des cadres physiques (frames), supprimant la fragmentation externe.
+Que fait la segmentation ?	Divise la mémoire logique d’un processus en segments (code, données, pile), chacun ayant sa base et sa limite.
+Quel est le rôle de la MMU ?	Traduire les adresses virtuelles en adresses physiques et vérifier les droits d’accès.
+Quelle différence entre espace d’adressage virtuel et physique ?	Virtuel : utilisé par les programmes (indépendant du matériel).   Physique : correspond à la mémoire réelle.
+Pourquoi a-t-on besoin d’un système d’exploitation ?	Pour permettre à plusieurs programmes d’utiliser les mêmes ressources matérielles de manière sûre, efficace et abstraite.
+Quelles sont les trois couches principales d’un système d’exploitation ?	Kernel (noyau) : contrôle total du matériel.   System Call Interface (SCI) : interface pour les programmes utilisateurs.   Architecture Interface : couche dépendante du matériel (CPU, mémoire, périphériques).
+Quelle est la différence entre un interpréteur comme la JVM et un OS ?	La JVM s’exécute au-dessus de l’OS et fournit une abstraction pour un langage.   L’OS s’exécute au-dessus du matériel et fournit une abstraction pour toutes les applications.
+Qu’est-ce que le mode noyau et le mode utilisateur ?	Mode noyau : accès complet aux ressources matérielles.   Mode utilisateur : accès restreint, passe par le SCI pour les opérations privilégiées.
+Pourquoi séparer le mode utilisateur du mode noyau ?	Pour éviter qu’un programme utilisateur puisse corrompre la mémoire ou le matériel du système.
+Quelle instruction ARM64 provoque un passage en mode noyau ?	"svc #0 (Supervisor Call)."
+Qu’est-ce qu’un “exception handler” ?	Une fonction spéciale du noyau qui traite les exceptions (interruption, trap, syscall, etc.).
+Quelle est la différence entre une exception et une interruption ?	Exception : déclenchée par le programme (ex. division par zéro).   Interruption : déclenchée par un événement externe (ex. signal matériel).
+Quelle est la différence entre le firmware et l’OS ?	Firmware : code bas-niveau installé sur le matériel, exécuté avant l’OS.   OS : logiciel généraliste chargé ensuite pour gérer tout le système.
+Quel est l’objectif principal du scheduler ?	Décider quel processus doit utiliser le CPU à chaque instant pour maximiser l’efficacité et l’équité.
+À quoi sert l’interface d’appel système ?	C’est la passerelle entre les applications utilisateur et les services du noyau (lecture, écriture, création de processus, etc.).
+Que fait le registre w8 avant un svc ?	Il contient le numéro de l’appel système à exécuter.
+Quels registres sont utilisés pour passer les arguments d’un appel système ?	x0, x1, x2, x3, x4, x5 (selon le nombre d’arguments).
+Qu’est-ce qu’une “wrapper library” ?	Une bibliothèque (comme libc) qui fournit des fonctions C simplifiant l’usage des appels système (ex. printf() → write()).
+Comment Python appelle-t-il un appel système Linux ?	Par libc.syscall(...) via le module ctypes, qui invoque directement la fonction C.
+À quoi sert strace ?	À afficher et suivre les appels système effectués par un programme (utile pour comprendre son fonctionnement).
+Quelle différence entre SIGKILL et SIGINT ?	SIGKILL tue immédiatement le processus (non interceptable).SIGINT peut être intercepté (ex. Ctrl+C dans un terminal).
+Qu’est-ce que getpid() ?	Un appel système qui retourne l’ID du processus courant.
+Comment un programme peut-il gérer un signal ?	En enregistrant un handler avec signal.signal(SIGINT, ma_fonction) (en Python ou C).
+Que fait un “system call wrapper” comme write() ?	Il prépare les registres, appelle svc, et traduit les codes d’erreurs du noyau en exceptions ou valeurs de retour.
+Qu’est-ce que la mémoire virtuelle ?	Un espace d’adressage abstrait fourni par le noyau à chaque processus, traduisant les adresses virtuelles en adresses physiques via la MMU.
+Pourquoi utiliser la mémoire virtuelle ?	solation des processus.  Simplification de la gestion mémoire. Protection et sécurité.
+Qu’est-ce que la MMU (Memory Management Unit) ?	Un composant matériel qui traduit les adresses virtuelles en physiques et vérifie les permissions d’accès.
+Quelle différence entre segmentation et pagination ?	Segmentation : la mémoire est divisée en segments logiques de tailles variables.   Pagination : la mémoire est découpée en pages de taille fixe.
+Pourquoi la pagination élimine-t-elle la fragmentation externe ?	Parce que toutes les pages ont la même taille, donc tout espace libre peut accueillir une page.
+Qu’est-ce que le page sharing ?	Plusieurs processus partagent les mêmes pages physiques (utile pour les bibliothèques communes).
+Quelle est la cause de la segmentation fault ?	Une tentative d’accès à une adresse mémoire non autorisée (protection de page).
+Quelle différence entre la pile et le tas ?	Pile (stack) : allocation automatique pour fonctions locales (croît vers le bas).   Tas (heap) : allocation manuelle, croît vers le haut via malloc/brk.
+Que signifie “program break” ?	Limite supérieure du tas — l’adresse jusqu’où le programme a demandé de la mémoire via brk.
+Quels sont les deux appels système de gestion dynamique de mémoire ?	brk et mmap.
+Quelle est la principale faiblesse de brk ?	Elle entraîne facilement de la fragmentation et n’est pas thread-safe.
+Pourquoi mmap est-il préféré pour les grandes allocations ?	Car il permet d’allouer des zones indépendantes et de mapper directement des fichiers.
+Qu’est-ce que la fragmentation interne ?	Mémoire inutilisée à l’intérieur d’un bloc alloué.
+Qu’est-ce que la fragmentation externe ?	Espaces libres dispersés empêchant de nouvelles allocations.
+Qu’est-ce que le “First Fit” ?	Stratégie d’allocation qui choisit le premier espace libre assez grand.
+Que fait la stratégie “Best Fit” ?	Choisit le plus petit bloc possible pour minimiser le gaspillage, mais plus lente.
+Que fait “Next Fit” ?	Reprend la recherche à partir de la dernière position utilisée (utile quand il y a beaucoup d’allocations).
+Quelle est la structure de données utilisée par malloc ?	Des listes chaînées de blocs libres et occupés (free list / busy list).
+Que fait free() ?	Libère un bloc du tas et l’ajoute à la liste des blocs libres.
+Que contient la pile (stack) ?	Variables locales, adresses de retour, pointeurs de cadre (x29), registre de lien (x30).
+Quelle est la convention pour l’appel de fonction en ARM64 ?	Sauvegarder x29 et x30 sur la pile.   Créer un nouveau stack frame.   Restaurer avant ret.
+Que sont les registres callee-saved ?	Registres dont la valeur doit être restaurée par la fonction appelée (x19–x28).
+Quelle est la taille d’alignement requise pour sp ?	16 octets.
+Que se passe-t-il si on oublie de restaurer le registre x30 ?	Le retour de fonction (ret) échoue — le programme plante.
