@@ -1,0 +1,10 @@
+# venv local
+.venv/
+# artefacts
+*.apkg
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+__pycache__/
+*.pyc
