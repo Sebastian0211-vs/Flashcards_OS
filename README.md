@@ -10,7 +10,6 @@
 
 - `os_theory.apkg` → le deck Anki prêt à importer  
 - `README.md` → ce guide  
-- (optionnel) `anki_deck.csv` → version CSV si vous voulez l’éditer
 
 ---
 
