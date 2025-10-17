@@ -8,3 +8,10 @@ Thumbs.db
 .vscode/
 __pycache__/
 *.pyc
+/.idea/discord.xml
+/.idea/Flashcards_OS.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
