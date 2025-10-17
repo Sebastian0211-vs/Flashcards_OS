@@ -8,6 +8,10 @@ from datetime import datetime
 import os
 import io
 
+
+
+
+
 def build_suffix():
     run = os.getenv("GITHUB_RUN_NUMBER") or os.getenv("BUILD_NUMBER")
     if run:
@@ -23,6 +27,14 @@ OUT = ROOT / "os_theory.apkg"
 
 # --- Global deck name (root). Subdecks seront "OS Theory (202.1)::<Deck>" si colonne deck présente.
 ROOT_DECK_NAME = "OS Theory (202.1)"
+
+
+VERSION_FILE = ROOT / "VERSION"
+
+def read_version():
+    if VERSION_FILE.exists():
+        return VERSION_FILE.read_text(encoding="utf-8").strip()
+    return "0.0.0"
 
 # ---------- utils ----------
 def stable_id(seed: str) -> int:
@@ -278,11 +290,14 @@ def build_package():
 
     pkg.media_files = []
     suffix = build_suffix()
-
-    versioned_out = ROOT / f"os_theory-v+{suffix}.apkg"
+    version = read_version()
+    versioned_out = ROOT / f"os_theory-v{version}+{suffix}.apkg"
     pkg.write_to_file(str(versioned_out))
     pkg.write_to_file(str(OUT))
     print(f"[✓] Built {versioned_out.name} and {OUT.name}")
+
+
+
 def main():
     build_package()
 
